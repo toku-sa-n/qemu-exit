@@ -19,6 +19,7 @@ pub struct X86 {
 }
 
 /// Output a long on an io port
+#[cfg(feature = "nightly")]
 fn outl(io_base: u16, code: u32) {
     unsafe {
         asm!(
@@ -30,10 +31,43 @@ fn outl(io_base: u16, code: u32) {
     }
 }
 
+#[cfg(feature = "stable")]
+fn outl(io_base: u16, code: u32) {
+    extern "sysv64" {
+        fn asm_x86_outl(io_base: u16, code: u32);
+    }
+
+    unsafe {
+        asm_x86_outl(io_base, code);
+    }
+}
+
+#[cfg(feature = "nightly")]
+fn hlt() {
+    unsafe {
+        asm!("hlt", options(nomem, nostack));
+    }
+}
+
+#[cfg(feature = "stable")]
+fn hlt() {
+    extern "sysv64" {
+        fn asm_x86_hlt();
+    }
+
+    unsafe {
+        asm_x86_hlt();
+    }
+}
+
 impl X86 {
     /// Create an instance.
     pub const fn new(io_base: u16, custom_exit_success: u32) -> Self {
+        #[cfg(feature = "nightly")]
         assert!((custom_exit_success & 1) == 1);
+
+        #[cfg(feature = "stable")]
+        [(); 1][!((custom_exit_success & 1) == 1) as usize];
 
         X86 {
             io_base,
@@ -51,9 +85,7 @@ impl QEMUExit for X86 {
         // the last expression in the `panic!()` handler itself. This prevents a possible infinite
         // loop.
         loop {
-            unsafe {
-                asm!("hlt", options(nomem, nostack));
-            }
+            hlt();
         }
     }
 
