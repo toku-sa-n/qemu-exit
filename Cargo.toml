@@ -28,3 +28,11 @@ test = false
 [[test]]
 name = "exit_13"
 harness = false
+
+[features]
+default = ["nightly"]
+stable = ["cc"]
+nightly = []
+
+[build-dependencies]
+cc = { version = "1.0.68", optional = true }
