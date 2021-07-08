@@ -70,7 +70,7 @@
 //! - [QEMU sifive_test source](https://git.qemu.org/?p=qemu.git;a=blob;f=hw/misc/sifive_test.c)
 
 #![deny(missing_docs)]
-#![cfg_attr(feature="nightly",feature(asm,const_panic))]
+#![cfg_attr(feature = "nightly", feature(asm, const_panic))]
 #![no_std]
 
 #[cfg(target_arch = "aarch64")]
@@ -91,10 +91,10 @@ pub mod x86;
 #[cfg(target_arch = "x86_64")]
 pub use x86::*;
 
-#[cfg(all(feature = "stable",feature="nightly"))]
+#[cfg(all(feature = "stable", feature = "nightly"))]
 compile_error!("Both the `stable` and `nightly` feautres can't be enabled at the same time.");
 
-#[cfg(not(any(feature="stable",feature="nightly")))]
+#[cfg(not(any(feature = "stable", feature = "nightly")))]
 compile_error!("Either the `stable` or `nightly` feature must be enabled.");
 
 /// Generic interface for exiting QEMU.
