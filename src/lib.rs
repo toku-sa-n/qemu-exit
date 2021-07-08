@@ -92,6 +92,12 @@ pub mod x86;
 #[cfg(target_arch = "x86_64")]
 pub use x86::*;
 
+#[cfg(all(feature = "stable",feature="nightly"))]
+compile_error!("Both the `stable` and `nightly` feautres can't be enabled at the same time.");
+
+#[cfg(not(any(feature="stable",feature="nightly")))]
+compile_error!("Either the `stable` or `nightly` feature must be enabled.");
+
 /// Generic interface for exiting QEMU.
 pub trait QEMUExit {
     /// Exit with specified return code.
