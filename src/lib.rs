@@ -70,8 +70,7 @@
 //! - [QEMU sifive_test source](https://git.qemu.org/?p=qemu.git;a=blob;f=hw/misc/sifive_test.c)
 
 #![deny(missing_docs)]
-#![feature(asm)]
-#![feature(const_panic)]
+#![cfg_attr(feature="nightly",feature(asm,const_panic))]
 #![no_std]
 
 #[cfg(target_arch = "aarch64")]
